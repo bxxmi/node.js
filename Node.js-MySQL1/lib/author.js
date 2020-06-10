@@ -102,7 +102,6 @@ exports.author_update = function(request,response){
             response.writeHead(200);
             response.end(html);
         });
-
     });
 });
 }
