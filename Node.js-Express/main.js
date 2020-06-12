@@ -8,6 +8,7 @@ var qs = require('querystring');
 var bodyParser = require('body-parser');
 var compression = require('compression');
 
+app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended:false}));
 // 압축
 app.use(compression());
@@ -28,16 +29,21 @@ app.get('/', function(request, response) {
     var description = 'Hello, Node.js';
     var list = template.list(request.list);
     var html = template.HTML(title, list,
-      `<h2>${title}</h2>${description}`,
+      `<h2>${title}</h2>${description}
+      <img src="/images/hello.jpg" style="width:300px; display:block; margin-top:10px;">
+      `,
       `<a href="/create">create</a>`,
     );
     response.send(html);
 });
 
 // 페이지 상세보기
-app.get('/page/:pageId', function(request, response) {
-    var filteredId = path.parse(request.params.pageId).base;
-    fs.readFile(`data/${filteredId}`, 'utf8', function(err, description){
+app.get('/topic/:pageId', function(request, response, next) {
+  var filteredId = path.parse(request.params.pageId).base;
+  fs.readFile(`data/${filteredId}`, 'utf8', function(err, description){
+    if(err){
+      next(err);
+    } else {
       var title = request.params.pageId;
       var sanitizedTitle = sanitizeHtml(title);
       var sanitizedDescription = sanitizeHtml(description, {
@@ -54,7 +60,8 @@ app.get('/page/:pageId', function(request, response) {
           </form>`
       );
       response.send(html);
-    });
+    }
+  });
 });
 
 // 페이지 생성하기
@@ -133,6 +140,16 @@ app.post('/delete_process', function(request, response){
             fs.unlink(`data/${filteredId}`, function(error){
               response.redirect('/');
         });
+});
+
+// 404
+app.use(function(req, res, next){
+   res.status(404).send('Sorry cannot find that!');
+});
+
+app.use(function(err, req, res, next){
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
 });
 
 app.listen(3000, function() {
