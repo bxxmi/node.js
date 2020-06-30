@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>index.ejs</h1>
+	<a href="parameter?data1=aaa&data2=bbb">parameter</a>
+	<form action="parameter" method="get">
+		data1 : <input type="text" name="data1">
+		data2 : <input type="text" name="data2">
+		<button type="submit">전송</button>
+	</form>
+	<hr>
+	<form action="parameter" method="post">
+		data1 : <input type="text" name="data1">
+		data2 : <input type="text" name="data2">
+		<button type="submit">전송</button>
+	</form>
+	<hr>
+	<a href="save_cookie">쿠키저장</a><br>
+	<a href="load_cookie">쿠키로드</a> 
+	<hr>
+	<a href="save_session">세션저장</a>
+	<a href="load_session">세션로드</a>
+</body>
+</html>
